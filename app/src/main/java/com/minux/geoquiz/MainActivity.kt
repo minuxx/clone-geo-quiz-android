@@ -1,19 +1,19 @@
 package com.minux.geoquiz
 
-import android.app.ProgressDialog.show
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
-    private lateinit var nextButton: Button
+    private lateinit var previousButton: ImageButton
+    private lateinit var nextButton: ImageButton
     private lateinit var questionTextView: TextView
-    private val questionBacnk = listOf(
+    private val questionBank = listOf(
         Question(R.string.question_australia, true),
         Question(R.string.question_oceans, true),
         Question(R.string.question_mideast, false),
@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
+        previousButton = findViewById(R.id.previous_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
 
@@ -40,8 +41,17 @@ class MainActivity : AppCompatActivity() {
             checkAnswer(false)
         }
 
+        previousButton.setOnClickListener {
+            currentIndex = if (currentIndex == 0) {
+                questionBank.size - 1
+            } else {
+                (currentIndex - 1) % questionBank.size
+            }
+            updateQuestion()
+        }
+
         nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBacnk.size
+            currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
         }
 
@@ -49,12 +59,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
-        val questionTextResId = questionBacnk[currentIndex].textResId
+        val questionTextResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionTextResId)
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBacnk[currentIndex].answer
+        val correctAnswer = questionBank[currentIndex].answer
 
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
