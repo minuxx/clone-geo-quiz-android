@@ -8,9 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-// class 바깥쪽에 선언한 변수 -> 최상위 수준 속성
-// 1. 특정 클래스의 인스턴스를 생성하지 않고 바로 사용할 수 있으므로 애플리케이션이 실행되는 동안 속성값을 계속 보존해야 할 때 사용
-// 2. 애플리케이션 전체에서 사용하는 상수를 정의할 때 사용
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.d(TAG, "onCreate(Bundle?) called")
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -65,45 +61,41 @@ class MainActivity : AppCompatActivity() {
         updateQuestion()
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart() called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy() called")
-    }
-
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionTextResId)
+        changeButtonState()
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
+        questionBank[currentIndex].userAnswer = userAnswer
+        changeButtonState()
 
+        val correctAnswer = questionBank[currentIndex].answer
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
         }
-
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+
+        if (checkAllAnswered()) {
+            val message = "${getString(R.string.correct_percentage)} ${calculatePercentage()}%"
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun changeButtonState() {
+        trueButton.isEnabled = questionBank[currentIndex].userAnswer == null
+        falseButton.isEnabled = questionBank[currentIndex].userAnswer == null
+    }
+
+    private fun checkAllAnswered(): Boolean {
+        return questionBank.filter { it.userAnswer != null }.size == questionBank.size
+    }
+
+    private fun calculatePercentage(): Int {
+        val correctAnswerSize = questionBank.filter { it.userAnswer != null && it.userAnswer == it.answer }.size
+        return ((correctAnswerSize.toDouble() / questionBank.size) * 100).toInt()
     }
 }
