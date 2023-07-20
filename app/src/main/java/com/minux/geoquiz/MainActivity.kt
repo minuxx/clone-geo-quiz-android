@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
 
@@ -29,6 +30,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d(TAG, "onCreate(Bundle?) called")
+
+        val provider = ViewModelProvider(this)
+        val quizViewModel = provider[QuizViewModel::class.java]
+        Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
@@ -97,5 +103,30 @@ class MainActivity : AppCompatActivity() {
     private fun calculatePercentage(): Int {
         val correctAnswerSize = questionBank.filter { it.userAnswer != null && it.userAnswer == it.answer }.size
         return ((correctAnswerSize.toDouble() / questionBank.size) * 100).toInt()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart() called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume() called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause() called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop() called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy() called")
     }
 }
