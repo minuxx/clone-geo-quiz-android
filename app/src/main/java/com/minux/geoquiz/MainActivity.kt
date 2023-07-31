@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateQuestion() {
+//        Log.d(TAG, "Updating question text", Exception())
         val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
         changeButtonState()
