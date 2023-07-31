@@ -1,5 +1,6 @@
 package com.minux.geoquiz
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var previousButton: ImageButton
     private lateinit var nextButton: ImageButton
+    private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
 
     // by lazy 키워드를 사용하면 최초로 quizViewModel 이 사용될 때까지 초기화를 늦출 수 있다.
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button)
         previousButton = findViewById(R.id.previous_button)
         nextButton = findViewById(R.id.next_button)
+        cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
 
         trueButton.setOnClickListener {
@@ -50,6 +53,11 @@ class MainActivity : AppCompatActivity() {
         nextButton.setOnClickListener {
             quizViewModel.moveToNext()
             updateQuestion()
+        }
+
+        cheatButton.setOnClickListener {
+            val intent = Intent(this, CheatActivity::class.java)
+            startActivity(intent)
         }
 
         updateQuestion()
