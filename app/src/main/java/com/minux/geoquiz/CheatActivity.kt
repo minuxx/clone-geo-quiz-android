@@ -3,6 +3,7 @@ package com.minux.geoquiz
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -16,6 +17,7 @@ const val EXTRA_ANSWER_SHOWN = "com.minux.geoquiz.answer_shown"
 class CheatActivity : AppCompatActivity() {
     private lateinit var answerTextView: TextView
     private lateinit var showAnswerButton: Button
+    private lateinit var apiLevelTextView: TextView
 
     private val cheatViewModel: CheatViewModel by lazy {
         ViewModelProvider(this)[CheatViewModel::class.java]
@@ -30,6 +32,7 @@ class CheatActivity : AppCompatActivity() {
 
         answerTextView = findViewById(R.id.answer_text_view)
         showAnswerButton = findViewById(R.id.show_answer_button)
+        apiLevelTextView = findViewById(R.id.api_level_text_view)
         showAnswerButton.setOnClickListener {
             setAnswerTextView()
             setAnswerShownResult()
@@ -39,6 +42,8 @@ class CheatActivity : AppCompatActivity() {
             setAnswerTextView()
             setAnswerShownResult()
         }
+
+        apiLevelTextView.text = String.format(getString(R.string.api_level_text), Build.VERSION.SDK_INT)
     }
 
     private fun setAnswerTextView() {
