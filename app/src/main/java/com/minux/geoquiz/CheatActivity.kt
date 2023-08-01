@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 
+const val EXTRA_QUESTION_IDX = "com.minux.geoquiz.question_idx"
 private const val EXTRA_ANSWER_IS_TRUE = "com.minux.geoquiz.answer_is_true"
 const val EXTRA_ANSWER_SHOWN = "com.minux.geoquiz.answer_shown"
 
@@ -24,17 +25,19 @@ class CheatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cheat)
 
+        cheatViewModel.questionIdx = intent.getIntExtra(EXTRA_QUESTION_IDX, -1)
         cheatViewModel.answerIsTrue = intent.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false)
+
         answerTextView = findViewById(R.id.answer_text_view)
         showAnswerButton = findViewById(R.id.show_answer_button)
         showAnswerButton.setOnClickListener {
             setAnswerTextView()
-            setAnswerShownResult(true)
+            setAnswerShownResult()
         }
 
         if (cheatViewModel.isAnswerShown) {
             setAnswerTextView()
-            setAnswerShownResult(true)
+            setAnswerShownResult()
         }
     }
 
@@ -46,17 +49,19 @@ class CheatActivity : AppCompatActivity() {
         answerTextView.setText(answerText)
     }
 
-    private fun setAnswerShownResult(isAnswerShown: Boolean) {
+    private fun setAnswerShownResult() {
         cheatViewModel.isAnswerShown = true
         val data = Intent().apply {
-            putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown)
+            putExtra(EXTRA_QUESTION_IDX, cheatViewModel.questionIdx)
+            putExtra(EXTRA_ANSWER_SHOWN, true)
         }
         setResult(Activity.RESULT_OK, data)
     }
 
     companion object {
-        fun newIntent(packageContext: Context, answerIsTrue: Boolean): Intent {
+        fun newIntent(packageContext: Context, questionIdx: Int, answerIsTrue: Boolean): Intent {
             return Intent(packageContext, CheatActivity::class.java).apply {
+                putExtra(EXTRA_QUESTION_IDX, questionIdx)
                 putExtra(EXTRA_ANSWER_IS_TRUE, answerIsTrue)
             }
         }

@@ -13,14 +13,16 @@ class QuizViewModel : ViewModel() {
         Question(R.string.question_americas, true),
         Question(R.string.question_asia, true)
     )
-    private var currentIndex = 0
-    var isCheater = false
+    var currentIndex = 0
 
     val currentQuestionAnswer: Boolean
         get() = questionBank[currentIndex].answer
 
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
+
+    val currentQuestionIsCheat: Boolean
+        get() = questionBank[currentIndex].isCheat
 
     val isAnswer: Boolean
         get() = questionBank[currentIndex].userAnswer != null
@@ -48,5 +50,9 @@ class QuizViewModel : ViewModel() {
 
     fun saveUserAnswer(userAnswer: Boolean) {
         questionBank[currentIndex].userAnswer = userAnswer
+    }
+
+    fun changeQuestionIsCheatTrue(questionIdx: Int) {
+        questionBank[questionIdx].isCheat = true
     }
 }
