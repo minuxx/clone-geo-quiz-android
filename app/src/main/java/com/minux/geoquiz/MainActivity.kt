@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                 val isCheat = it.data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
                 if (isCheat && questionIdx != -1) {
                     quizViewModel.changeQuestionIsCheatTrue(questionIdx)
+                    cheatButton.isEnabled = quizViewModel.isOkCheat
                 }
             }
         }
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateQuestion()
+        cheatButton.isEnabled = quizViewModel.isOkCheat
     }
 
     private fun updateQuestion() {
